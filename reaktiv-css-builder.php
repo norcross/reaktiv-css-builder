@@ -70,6 +70,48 @@ class RKV_Custom_CSS_Builder {
 	}
 
 	/**
+	 * save the css code
+	 *
+	 * @return void
+	 */
+	
+	public function save_css_code( $css_code ) {
+
+		// The `rkvcss_get_css_code` action is run inside `sanitize_css`
+		$css_code = $this->sanitize_css( $css_code );
+		update_option( 'reaktiv-custom-css', $css_code );
+
+	}
+
+	/**
+	 * get the css code
+	 *
+	 * @return string
+	 */
+	
+	public function get_css_code() {
+
+		$css_code = get_option( 'reaktiv-custom-css' );
+		return apply_filters( 'rkvcss_get_css_code', $css_code );
+
+	}
+
+
+	/**
+	 * sanitize the css
+	 */
+
+	public function sanitize_css( $raw_css_code ) {
+
+		// @todo: Add additional sanitizing of the CSS in here.
+		$sanitized_css_code = apply_filters( 'rkvcss_sanitize_css', $raw_css_code );
+
+		do_action( 'rkvcss_save_css_code', $sanitized_css_code, $raw_css_code );
+		return $sanitized_css_code;
+
+	}
+
+	/**
 	 * set filename and create folder if need be for reuse
 	 *
 	 * @return
@@ -148,6 +190,8 @@ class RKV_Custom_CSS_Builder {
 			echo '</div>';
 		endif;
 
+		do_action( 'rkvcss_after_write_css', $generate );
+
 		return;
 
 	}
@@ -168,7 +212,7 @@ class RKV_Custom_CSS_Builder {
 			return false;
 
 		// get the new CSS
-		$data	= get_option( 'reaktiv-custom-css' );
+		$data	= $this->get_css_code();
 
 		$write	= trim( $data );
 		fwrite( $check, $write );
@@ -231,7 +275,8 @@ class RKV_Custom_CSS_Builder {
 	 */
 
 	public function settings() {
-		register_setting( 'reaktiv-custom-css', 'reaktiv-custom-css');
+
+		register_setting( 'reaktiv-custom-css', 'reaktiv-custom-css', array( $this, 'sanitize_css' ) );
 
 	}
 
@@ -266,7 +311,7 @@ class RKV_Custom_CSS_Builder {
 
 	public function css_edit_page() {
 
-		$cssdata	= get_option( 'reaktiv-custom-css' );
+		$cssdata	= $this->get_css_code();
 
 		?>
 
@@ -351,7 +396,7 @@ class RKV_Custom_CSS_Builder {
 			return;
 
 		// get current settings
-		$current	= get_option( 'reaktiv-custom-css' );
+		$current	= $this->get_css_code();
 
 		// if settings empty, bail
 		if ( empty( $current ) ) {
@@ -430,7 +475,7 @@ class RKV_Custom_CSS_Builder {
 		}
 
 		// everything is gold! lets make some magic
-		update_option( 'reaktiv-custom-css', $options[0] );
+		$this->save_css_code( $options[0] );
 
 		// generate the new CSS
 		$build	= $this->generate_css();

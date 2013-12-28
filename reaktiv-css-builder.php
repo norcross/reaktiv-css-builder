@@ -148,6 +148,8 @@ class RKV_Custom_CSS_Builder {
 			echo '</div>';
 		endif;
 
+		do_action( 'rkvcss_after_write_css', $generate );
+
 		return;
 
 	}

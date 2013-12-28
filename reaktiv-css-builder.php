@@ -77,6 +77,7 @@ class RKV_Custom_CSS_Builder {
 	
 	public function save_css_code( $css_code ) {
 
+		$css_code = $this->sanitize_css( $css_code );
 		update_option( 'reaktiv-custom-css', $css_code );
 		do_action( 'rkvcss_save_css_code', $css_code );
 

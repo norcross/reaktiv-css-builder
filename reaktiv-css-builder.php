@@ -77,9 +77,9 @@ class RKV_Custom_CSS_Builder {
 	
 	public function save_css_code( $css_code ) {
 
+		// The `rkvcss_get_css_code` action is run inside `sanitize_css`
 		$css_code = $this->sanitize_css( $css_code );
 		update_option( 'reaktiv-custom-css', $css_code );
-		do_action( 'rkvcss_save_css_code', $css_code );
 
 	}
 
@@ -106,6 +106,7 @@ class RKV_Custom_CSS_Builder {
 		// @todo: Add additional sanitizing of the CSS in here.
 		$sanitized_css_code = apply_filters( 'rkvcss_sanitize_css', $raw_css_code );
 
+		do_action( 'rkvcss_save_css_code', $sanitized_css_code, $raw_css_code );
 		return $sanitized_css_code;
 
 	}

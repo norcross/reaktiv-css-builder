@@ -95,6 +95,20 @@ class RKV_Custom_CSS_Builder {
 
 	}
 
+
+	/**
+	 * sanitize the css
+	 */
+
+	public function sanitize_css( $raw_css_code ) {
+
+		// @todo: Add additional sanitizing of the CSS in here.
+		$sanitized_css_code = apply_filters( 'rkvcss_sanitize_css', $raw_css_code );
+
+		return $sanitized_css_code;
+
+	}
+
 	/**
 	 * set filename and create folder if need be for reuse
 	 *
@@ -259,7 +273,8 @@ class RKV_Custom_CSS_Builder {
 	 */
 
 	public function settings() {
-		register_setting( 'reaktiv-custom-css', 'reaktiv-custom-css');
+
+		register_setting( 'reaktiv-custom-css', 'reaktiv-custom-css', array( $this, 'sanitize_css' ) );
 
 	}
 

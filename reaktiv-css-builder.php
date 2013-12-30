@@ -6,6 +6,8 @@ Description: Make simple CSS customizations
 Version: 1.1.0
 Author: Andrew Norcross
 Author URI: http://andrewnorcross.com
+Text Domain: reaktiv-css-builder
+Domain Path: /languages
 
 	Copyright 2013 Andrew Norcross
 
@@ -65,7 +67,7 @@ class RKV_Custom_CSS_Builder {
 
 	public function textdomain() {
 
-		load_plugin_textdomain( 'rkvcss', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'reaktiv-css-builder', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 	}
 
@@ -181,12 +183,12 @@ class RKV_Custom_CSS_Builder {
 		if ( $generate === true ) :
 			// checks passed, display the message
 			echo '<div class="updated">';
-				echo '<p>'.__( 'The custom CSS has been generated.', 'rkvcss' ).'</p>';
+				echo '<p>'.__( 'The custom CSS has been generated.', 'reaktiv-css-builder' ).'</p>';
 			echo '</div>';
 		else:
 			// checks failed, display the message
 			echo '<div class="error">';
-				echo '<p>'.__( 'The custom CSS could not be generated.', 'rkvcss' ).'</p>';
+				echo '<p>'.__( 'The custom CSS could not be generated.', 'reaktiv-css-builder' ).'</p>';
 			echo '</div>';
 		endif;
 
@@ -259,7 +261,7 @@ class RKV_Custom_CSS_Builder {
 		// check to make sure we are on the correct plugin
 		if ($file == $this_plugin) {
 
-			$settings_link	= '<a href="' . menu_page_url( 'reaktiv-custom-css', 0 ) . '">'.__( 'CSS Builder', 'rkvcss' ).'</a>';
+			$settings_link	= '<a href="' . menu_page_url( 'reaktiv-custom-css', 0 ) . '">'.__( 'CSS Builder', 'reaktiv-css-builder' ).'</a>';
 			array_push( $links, $settings_link );
 
 		}
@@ -299,7 +301,7 @@ class RKV_Custom_CSS_Builder {
 	 */
 
 	public function css_edit_menu() {
-		add_theme_page( __( 'CSS Builder', 'rkvcss' ), __( 'CSS Builder', 'rkvcss' ), apply_filters( 'reaktiv_css_caps', 'manage_options' ), 'reaktiv-custom-css', array( $this, 'css_edit_page' ) );
+		add_theme_page( __( 'CSS Builder', 'reaktiv-css-builder' ), __( 'CSS Builder', 'reaktiv-css-builder' ), apply_filters( 'reaktiv_css_caps', 'manage_options' ), 'reaktiv-custom-css', array( $this, 'css_edit_page' ) );
 	}
 
 
@@ -317,18 +319,18 @@ class RKV_Custom_CSS_Builder {
 
 		<div class="wrap">
 		<div class="icon32" id="icon-tools"><br></div>
-		<h2><?php _e( 'Custom CSS Builder', 'rkvcss' ) ?></h2>
+		<h2><?php _e( 'Custom CSS Builder', 'reaktiv-css-builder' ) ?></h2>
 
 			<div class="reaktiv-form-wrap">
 
 			<form class="reaktiv-custom-css" method="post" action="options.php">
 				<?php settings_fields( 'reaktiv-custom-css' ); ?>
 
-				<p><?php _e( 'Enter your CSS below and it will display on the front end of the site. Keep in mind that you may have to be more specific that the existing CSS for it to take precedent.', 'rkvcss' ); ?></p>
+				<p><?php _e( 'Enter your CSS below and it will display on the front end of the site. Keep in mind that you may have to be more specific that the existing CSS for it to take precedent.', 'reaktiv-css-builder' ); ?></p>
 
 				<textarea name="reaktiv-custom-css" id="reaktiv-custom-css" class="widefat code"><?php echo esc_attr( $cssdata ); ?></textarea>
 
-				<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save CSS', 'rkvcss' ); ?>" /></p>
+				<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save CSS', 'reaktiv-css-builder' ); ?>" /></p>
 			</form>
 
 			<?php self::css_data_manager(); ?>
@@ -350,17 +352,17 @@ class RKV_Custom_CSS_Builder {
 		$expnonce	= wp_create_nonce( 'rkv_css_export_nonce' );
 
 		echo '<div class="reaktiv-data-setup">';
-			echo '<h3 class="title">'.__( 'Export CSS Data', 'rkvcss' ).'</h3>';
+			echo '<h3 class="title">'.__( 'Export CSS Data', 'reaktiv-css-builder' ).'</h3>';
 
 			echo '<p>';
-				echo '<a href="'.menu_page_url( 'reaktiv-custom-css', 0 ).'&amp;reaktiv-css-export=go&amp;_wpnonce='.$expnonce.'" class="button-primary button-small">'.__( 'Export File', 'rkvcss' ).'</a>';
-				echo '&nbsp;<span class="description">'.__( 'Export your entered CSS in JSON format to import on another site.', 'rkvcss' ).'</span>';
+				echo '<a href="'.menu_page_url( 'reaktiv-custom-css', 0 ).'&amp;reaktiv-css-export=go&amp;_wpnonce='.$expnonce.'" class="button-primary button-small">'.__( 'Export File', 'reaktiv-css-builder' ).'</a>';
+				echo '&nbsp;<span class="description">'.__( 'Export your entered CSS in JSON format to import on another site.', 'reaktiv-css-builder' ).'</span>';
 			echo '</p>';
 
 		echo '</div>';
 
 		echo '<div class="reaktiv-data-setup">';
-			echo '<h3 class="title">'.__( 'Import CSS Data', 'rkvcss' ).'</h3>';
+			echo '<h3 class="title">'.__( 'Import CSS Data', 'reaktiv-css-builder' ).'</h3>';
 
 			echo '<form enctype="multipart/form-data" method="post" action="'.menu_page_url( 'reaktiv-custom-css', 0 ).'&amp;reaktiv-css-import=go">';
 				wp_nonce_field( 'rkv_css_import_nonce' );
@@ -368,8 +370,8 @@ class RKV_Custom_CSS_Builder {
 				echo '<input class="reaktiv-import-upload" type="file" name="reaktiv-css-import-upload" size="25" />';
 
 				echo '<p>';
-					echo get_submit_button( __( 'Import File', 'rkvcss' ), 'primary', 'reaktiv-css-import-submit', false, false );
-					echo '&nbsp;<span class="description">'.__( 'Import a previously saved JSON file.', 'rkvcss' ).'</span>';
+					echo get_submit_button( __( 'Import File', 'reaktiv-css-builder' ), 'primary', 'reaktiv-css-import-submit', false, false );
+					echo '&nbsp;<span class="description">'.__( 'Import a previously saved JSON file.', 'reaktiv-css-builder' ).'</span>';
 				echo '</p>';
 
 			echo '</form>';

@@ -230,13 +230,22 @@ class RKV_Custom_CSS_Builder {
 	public function admin_scripts( $hook ) {
 
 		if ( $hook == 'appearance_page_reaktiv-custom-css' ) :
+			
+			if ( false == apply_filters( 'reaktiv_css_debug_mode', WP_DEBUG ) ) {
 
-			wp_enqueue_style( 'codemirror', plugins_url('lib/css/codemirror.css', __FILE__), array(), null, 'all' );
-			wp_enqueue_style( 'reaktiv-css-admin', plugins_url('lib/css/reaktiv.admin.css', __FILE__), array(), null, 'all' );
+				wp_enqueue_style( 'codemirror', plugins_url('lib/css/codemirror.css', __FILE__), array(), null, 'all' );
+				wp_enqueue_style( 'reaktiv-css-admin', plugins_url('lib/css/reaktiv.admin.css', __FILE__), array(), null, 'all' );
 
-			wp_enqueue_script( 'codemirror-base', plugins_url('lib/js/codemirror.js', __FILE__), array('jquery'), null, true );
-			wp_enqueue_script( 'codemirror-css', plugins_url('lib/js/codemirror.css.js', __FILE__), array('jquery'), null, true );
-			wp_enqueue_script( 'reaktiv-css-admin', plugins_url('lib/js/reaktiv.admin.js', __FILE__), array('jquery'), null, true );
+				wp_enqueue_script( 'codemirror-base', plugins_url('lib/js/codemirror.js', __FILE__), array('jquery'), null, true );
+				wp_enqueue_script( 'codemirror-css', plugins_url('lib/js/codemirror.css.js', __FILE__), array('jquery'), null, true );
+				wp_enqueue_script( 'reaktiv-css-admin', plugins_url('lib/js/reaktiv.admin.js', __FILE__), array('jquery'), null, true );
+			
+			} else {
+				
+				wp_enqueue_style( 'reaktiv-css-admin', plugins_url('lib/css/reaktiv.admin.min.css', __FILE__), array(), null, 'all' );
+				wp_enqueue_script( 'reaktiv-css-admin', plugins_url('lib/js/reaktiv.admin.min.js', __FILE__), array('jquery'), null, true );
+				
+			}
 
 		endif;
 

@@ -28,7 +28,15 @@ Domain Path: /languages
  // Start up the engine
 class RKV_Custom_CSS_Builder {
 
-
+	/**
+	 * Current version of the plugin.
+	 * 
+	 * @since	1.1.0
+	 * @access	public
+	 * @var		string	$version
+	 */
+	public $version = '1.1.0';
+	
 	/**
 	 * This is our constructor. There are many like it, but this one is mine.
 	 *
@@ -232,13 +240,25 @@ class RKV_Custom_CSS_Builder {
 	public function admin_scripts( $hook ) {
 
 		if ( $hook == 'appearance_page_reaktiv-custom-css' ) :
+			
+			if ( true == apply_filters( 'reaktiv_css_debug_mode', WP_DEBUG ) ) {
 
-			wp_enqueue_style( 'codemirror', plugins_url('lib/css/codemirror.css', __FILE__), array(), null, 'all' );
-			wp_enqueue_style( 'reaktiv-css-admin', plugins_url('lib/css/reaktiv.admin.css', __FILE__), array(), null, 'all' );
+				wp_enqueue_style( 'codemirror', plugins_url( 'lib/css/codemirror.css', __FILE__ ), array(), '3.20', 'all' );
+				wp_enqueue_style( 'reaktiv-css-admin', plugins_url( 'lib/css/reaktiv.admin.css', __FILE__ ), array(), $this->version, 'all' );
 
-			wp_enqueue_script( 'codemirror-base', plugins_url('lib/js/codemirror.js', __FILE__), array('jquery'), null, true );
-			wp_enqueue_script( 'codemirror-css', plugins_url('lib/js/codemirror.css.js', __FILE__), array('jquery'), null, true );
-			wp_enqueue_script( 'reaktiv-css-admin', plugins_url('lib/js/reaktiv.admin.js', __FILE__), array('jquery'), null, true );
+				wp_enqueue_script( 'codemirror-base', plugins_url( 'lib/js/codemirror.js', __FILE__ ), array( 'jquery' ), '3.20', true );
+				wp_enqueue_script( 'codemirror-css', plugins_url( 'lib/js/codemirror.css.js', __FILE__ ), array( 'jquery', ), '3.20', true );
+				wp_enqueue_script( 'reaktiv-js-admin', plugins_url( 'lib/js/reaktiv.admin.js', __FILE__ ), array( 'jquery' ), $this->version, true );
+			
+			} else {
+				
+				wp_enqueue_style( 'codemirror', plugins_url( 'lib/css/codemirror.min.css', __FILE__ ), array('reaktiv-css-admin'), '3.20', 'all' );
+				wp_enqueue_style( 'reaktiv-css-admin', plugins_url( 'lib/css/reaktiv.admin.min.css', __FILE__ ), array(), $this->version, 'all' );
+				
+				wp_enqueue_script( 'codemirror-base', plugins_url( 'lib/js/codemirror.min.js', __FILE__ ), array( 'jquery' ), '3.20', true );
+				wp_enqueue_script( 'reaktiv-js-admin', plugins_url( 'lib/js/reaktiv.admin.min.js', __FILE__ ), array( 'jquery' ), $this->version, true );
+				
+			}
 
 		endif;
 

@@ -3,7 +3,7 @@
 Plugin Name: Reaktiv CSS Builder
 Plugin URI: http://reaktivstudios.com/plugins/
 Description: Make simple CSS customizations
-Version: 1.1.0
+Version: 1.1.1
 Author: Andrew Norcross
 Author URI: http://andrewnorcross.com
 Text Domain: reaktiv-css-builder
@@ -25,18 +25,19 @@ Domain Path: /languages
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
  // Start up the engine
 class RKV_Custom_CSS_Builder {
 
 	/**
 	 * Current version of the plugin.
-	 * 
+	 *
 	 * @since	1.1.0
 	 * @access	public
 	 * @var		string	$version
 	 */
-	public $version = '1.1.0';
-	
+	public $version = '1.1.1';
+
 	/**
 	 * This is our constructor. There are many like it, but this one is mine.
 	 *
@@ -84,7 +85,7 @@ class RKV_Custom_CSS_Builder {
 	 *
 	 * @return void
 	 */
-	
+
 	public function save_css_code( $css_code ) {
 
 		// The `rkvcss_get_css_code` action is run inside `sanitize_css`
@@ -98,7 +99,7 @@ class RKV_Custom_CSS_Builder {
 	 *
 	 * @return string
 	 */
-	
+
 	public function get_css_code() {
 
 		$css_code = get_option( 'reaktiv-custom-css' );
@@ -207,6 +208,34 @@ class RKV_Custom_CSS_Builder {
 	}
 
 	/**
+	 * minify the CSS
+	 *
+	 * @return minified CSS
+	 */
+
+	public function minify_css( $css ) {
+
+		if ( false === apply_filters( 'reaktiv_css_minify', true ) )
+			return $css;
+
+		// remove comments
+		$css	= preg_replace( '#\s+#', ' ', $css );
+		$css	= preg_replace( '#/\*.*?\*/#s', '', $css );
+
+		// set array for various spacing stuff to be cleaned up
+		$remove		= array( '; ',	': ',	' {',	'{ ',	', ',	'} ',	' }',	';}'	);
+		$replace	= array( ';',	':',	'{',	'{',	',',	'}',	'}',	'}'		);
+
+		// remove extra spacing
+		$css	= str_replace( $remove, $replace, $css );
+
+		// add back a line break for media queries
+		$css	= str_replace( '@media', "\n".'@media', $css );
+
+		return trim( $css );
+	}
+
+	/**
 	 * actual CSS generation
 	 *
 	 * @return
@@ -222,7 +251,13 @@ class RKV_Custom_CSS_Builder {
 			return false;
 
 		// get the new CSS
-		$data	= $this->get_css_code();
+		$css	= $this->get_css_code();
+
+		// run through minification
+		$css	= $this->minify_css( $css );
+
+		$data	= '/* custom CSS generated '.date( 'r', time() ).' */'."\n";
+		$data	.= $css;
 
 		$write	= trim( $data );
 		fwrite( $check, $write );
@@ -240,24 +275,26 @@ class RKV_Custom_CSS_Builder {
 	public function admin_scripts( $hook ) {
 
 		if ( $hook == 'appearance_page_reaktiv-custom-css' ) :
-			
+
 			if ( true == apply_filters( 'reaktiv_css_debug_mode', WP_DEBUG ) ) {
 
-				wp_enqueue_style( 'codemirror', plugins_url( 'lib/css/codemirror.css', __FILE__ ), array(), '3.20', 'all' );
+				wp_enqueue_style( 'cm', plugins_url( 'lib/css/codemirror.css', __FILE__ ), array(), '3.21', 'all' );
 				wp_enqueue_style( 'reaktiv-css-admin', plugins_url( 'lib/css/reaktiv.admin.css', __FILE__ ), array(), $this->version, 'all' );
 
-				wp_enqueue_script( 'codemirror-base', plugins_url( 'lib/js/codemirror.js', __FILE__ ), array( 'jquery' ), '3.20', true );
-				wp_enqueue_script( 'codemirror-css', plugins_url( 'lib/js/codemirror.css.js', __FILE__ ), array( 'jquery', ), '3.20', true );
+				wp_enqueue_script( 'cm-base', plugins_url( 'lib/js/codemirror.js', __FILE__ ), array( 'jquery' ), '3.21', true );
+				wp_enqueue_script( 'cm-hint', plugins_url( 'lib/js/codemirror.hint.js', __FILE__ ), array( 'jquery', ), '3.21', true );
+				wp_enqueue_script( 'cm-css-hint', plugins_url( 'lib/js/codemirror.css.hint.js', __FILE__ ), array( 'jquery', ), '3.21', true );
+				wp_enqueue_script( 'cm-css', plugins_url( 'lib/js/codemirror.css.js', __FILE__ ), array( 'jquery', ), '3.21', true );
 				wp_enqueue_script( 'reaktiv-js-admin', plugins_url( 'lib/js/reaktiv.admin.js', __FILE__ ), array( 'jquery' ), $this->version, true );
-			
+
 			} else {
-				
-				wp_enqueue_style( 'codemirror', plugins_url( 'lib/css/codemirror.min.css', __FILE__ ), array('reaktiv-css-admin'), '3.20', 'all' );
+
+				wp_enqueue_style( 'cm', plugins_url( 'lib/css/codemirror.min.css', __FILE__ ), array('reaktiv-css-admin'), '3.21', 'all' );
 				wp_enqueue_style( 'reaktiv-css-admin', plugins_url( 'lib/css/reaktiv.admin.min.css', __FILE__ ), array(), $this->version, 'all' );
-				
-				wp_enqueue_script( 'codemirror-base', plugins_url( 'lib/js/codemirror.min.js', __FILE__ ), array( 'jquery' ), '3.20', true );
+
+				wp_enqueue_script( 'cm-base', plugins_url( 'lib/js/codemirror.min.js', __FILE__ ), array( 'jquery' ), '3.21', true );
 				wp_enqueue_script( 'reaktiv-js-admin', plugins_url( 'lib/js/reaktiv.admin.min.js', __FILE__ ), array( 'jquery' ), $this->version, true );
-				
+
 			}
 
 		endif;

@@ -5,7 +5,7 @@ Donate link: http://andrewnorcross.com/donate
 Tags: css, custom design
 Requires at least: 3.6
 Tested up to: 3.8
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,11 @@ Sure can! The buttons below will allow for importing and exporting. A JSON file 
 
 
 == Changelog ==
+
+= 1.1.1 =
+* Updated syntax highlighting library to current version (CodeMirror)
+* Added minification to admin CSS and JS files
+* Mifified CSS output
 
 = 1.1.0 =
 * Adding import / export functionality

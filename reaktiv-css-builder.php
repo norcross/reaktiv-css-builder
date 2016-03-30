@@ -253,6 +253,14 @@ class RKV_Custom_CSS_Builder {
 		// get the new CSS
 		$css	= $this->get_css_code();
 
+		/**
+		 * Allow developers to inject separate css into the file
+		 * without having to save it in the reaktiv-custom-css option
+		 * 
+		 * @var string $css
+		 */
+		$css = apply_filters( 'rkvcss_before_minify', $css );
+
 		// run through minification
 		$css	= $this->minify_css( $css );
 
